@@ -10,7 +10,7 @@ package at.ac.fhcampuswien
  */
 data class CompareResult(val n: Int, val m: Int) {
     override fun toString(): String {
-        return "Output: $m:$n" // Note: Flipped to match your "m:n" output format
+        return "Output: $m:$n"
     }
 }
 

@@ -14,9 +14,9 @@ class App {
 
         do {
             println("Guess the $digitsToGuess-digit number:")
-            userGuess = readln().toInt() // This will throw a NumberFormatException if the input is not an integer
+            userGuess = readln().toInt()
             result = checkUserInputAgainstGeneratedNumber(userGuess, randomNumber)
-            println(result) // This will automatically call toString() from CompareResult
+            println(result)
         } while (result.m != digitsToGuess)
 
         println("Congratulations, you've guessed the correct number: $randomNumber")
@@ -39,8 +39,7 @@ class App {
     val generateRandomNonRepeatingNumber: (Int) -> Int = { length ->
         //TODO implement the function
         require(length in 1..9) { "Length must be between 1 and 9" }
-        val digits = (1..9).shuffled().take(length).joinToString("")
-        digits.toInt()
+        (1..9).toList().shuffled().take(length).joinToString("").toInt()
     }
 
     /**
@@ -66,15 +65,29 @@ class App {
 
         require(inputStr.length == generatedStr.length) { "Input and generated number must have the same number of digits" }
 
-        var correctPositions = 0 // This will be 'm' in CompareResult
-        var correctDigits = 0 // This will be 'n' in CompareResult
-        val seen = mutableSetOf<Char>()
+        var correctPositions = 0
+        var correctDigits = 0
+        val seenInGenerated = mutableSetOf<Char>()
+        val seenInInput = mutableSetOf<Char>()
 
-        for (i in inputStr.indices) {
-            if (inputStr[i] == generatedStr[i]) correctPositions++
-            if (inputStr[i] in generatedStr && inputStr[i] !in seen) {
-                correctDigits++
-                seen.add(inputStr[i])
+        // für korrekte Position
+        for (index in inputStr.indices) {
+            if (inputStr[index] == generatedStr[index]) {
+                correctPositions++
+                seenInInput.add(inputStr[index])
+            }
+        }
+
+        // für korekte Ziffern
+        for (digit in inputStr) {
+            if (digit in generatedStr && digit !in seenInGenerated) {
+                val minOccurrences = Math.min(inputStr.count { it == digit }, generatedStr.count { it == digit })
+                if (digit !in seenInInput) {
+                    correctDigits += minOccurrences
+                } else {
+                    correctDigits += Math.min(1, minOccurrences)
+                }
+                seenInGenerated.add(digit)
             }
         }
 
