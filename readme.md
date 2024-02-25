@@ -20,7 +20,7 @@ For example, when declaring a favoriteActor variable of type String:
 
 ```kotlin 
 // example code snippet
-val favoriteActor: String = "Sandra Oh" // non-null type
+val favoriteActor: String = "Sandra Oh" 
 ```
 In this case, favoriteActor cannot be set to null since String is a non-nullable type. Attempting to assign favoriteActor = null would result in a compilation error.
 
@@ -32,12 +32,12 @@ For instance, if you want the favoriteActor variable to be able to be null, you 
 
 ```kotlin 
 // example code snippet
-var favoriteActor: String? = "Sandra Oh" // non-null type
+var favoriteActor: String? = "Sandra Oh" 
 ```
 Now, favoriteActor can be set to null without causing a compilation error:
 ```kotlin 
 // example code snippet
-favoriteActor = null// non-null type
+favoriteActor = null
 ```
 
 ### What are lambda expressions and higher order functions in Kotlin? Why would you store a function inside a variable? (0,5 points)
