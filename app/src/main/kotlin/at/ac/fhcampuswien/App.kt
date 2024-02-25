@@ -5,8 +5,21 @@ package at.ac.fhcampuswien
 
 class App {
     // Game logic for a number guessing game
+
     fun playNumberGame(digitsToGuess: Int = 4) {
         //TODO: build a menu which calls the functions and works with the return values
+        val randomNumber = generateRandomNonRepeatingNumber(digitsToGuess)
+        var userGuess: Int
+        var result: CompareResult
+
+        do {
+            println("Guess the $digitsToGuess-digit number:")
+            userGuess = readln().toInt() // This will throw a NumberFormatException if the input is not an integer
+            result = checkUserInputAgainstGeneratedNumber(userGuess, randomNumber)
+            println(result) // This will automatically call toString() from CompareResult
+        } while (result.m != digitsToGuess)
+
+        println("Congratulations, you've guessed the correct number: $randomNumber")
     }
 
     /**
@@ -25,7 +38,9 @@ class App {
      */
     val generateRandomNonRepeatingNumber: (Int) -> Int = { length ->
         //TODO implement the function
-        0   // return value is a placeholder
+        require(length in 1..9) { "Length must be between 1 and 9" }
+        val digits = (1..9).shuffled().take(length).joinToString("")
+        digits.toInt()
     }
 
     /**
@@ -46,11 +61,30 @@ class App {
      */
     val checkUserInputAgainstGeneratedNumber: (Int, Int) -> CompareResult = { input, generatedNumber ->
         //TODO implement the function
-        CompareResult(0, 0)   // return value is a placeholder
+        val inputStr = input.toString()
+        val generatedStr = generatedNumber.toString()
+
+        require(inputStr.length == generatedStr.length) { "Input and generated number must have the same number of digits" }
+
+        var correctPositions = 0 // This will be 'm' in CompareResult
+        var correctDigits = 0 // This will be 'n' in CompareResult
+        val seen = mutableSetOf<Char>()
+
+        for (i in inputStr.indices) {
+            if (inputStr[i] == generatedStr[i]) correctPositions++
+            if (inputStr[i] in generatedStr && inputStr[i] !in seen) {
+                correctDigits++
+                seen.add(inputStr[i])
+            }
+        }
+
+        CompareResult(correctDigits, correctPositions)
     }
 }
 
 fun main() {
-    println("Hello World!")
+    val app = App()
+    println("Welcome to the Number Guessing Game!")
+    app.playNumberGame()
     // TODO: call the App.playNumberGame function with and without default arguments
 }
